@@ -1,0 +1,20 @@
+{
+  "name": "订单监控",
+  "description": "监控 12301 订单系统的下游失败订单，每 10 分钟检查一次，数据有更新时发送飞书通知",
+  "schedule": "*/10 * * * *",
+  "config": {
+    "type": "script",
+    "command": "node tasks/order-monitor.js",
+    "cwd": "/Users/ti.zen/.openclaw/workspace/automation-system",
+    "env": {
+      "ORDER_USERNAME": "ORDER_USERNAME",
+      "ORDER_PASSWORD": "ORDER_PASSWORD"
+    },
+    "timeout": 120000,
+    "notifyOnSuccess": true,
+    "notifyOnFailure": true,
+    "headless": true,
+    "maxOrders": 5,
+    "deduplication": true
+  }
+}
