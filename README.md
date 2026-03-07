@@ -311,5 +311,13 @@ MIT License
 
 ---
 
+## 🔗 相关链接
+
+- **GitHub 仓库：** https://github.com/chugelan/dasheng
+- **Releases：** https://github.com/chugelan/dasheng/releases
+- **Issues：** https://github.com/chugelan/dasheng/issues
+
+---
+
 **最后更新：** 2026-03-07  
 **当前版本：** v1.0.0
