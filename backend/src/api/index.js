@@ -9,6 +9,10 @@ const database = require('../database');
 const scheduler = require('../scheduler');
 const logger = require('../utils/logger');
 const screenshotCleanup = require('../scheduler/screenshot-cleanup');
+const feishuWebhook = require('./feishu-webhook');
+
+// 注册飞书命令
+feishuWebhook.registerBuiltInCommands();
 
 // ==================== 任务管理 ====================
 

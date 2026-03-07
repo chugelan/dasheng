@@ -6,6 +6,39 @@
       "enabled": 1,
       "schedule": "*/10 * * * *",
       "created_at": "2026-03-07T14:16:33.281Z"
+    },
+    {
+      "id": 2,
+      "name": "订单监控",
+      "description": "监控 12301 平台下游失败订单，数据去重不重复通知",
+      "enabled": 1,
+      "schedule": "*/10 * * * *",
+      "config": "{\"timeout\":120000,\"notifyOnSuccess\":true,\"notifyOnFailure\":true,\"deduplication\":true}",
+      "version": "1.0.0",
+      "publish_count": 0,
+      "created_at": "2026-03-07T14:34:02.366Z"
+    },
+    {
+      "id": 3,
+      "name": "景区采购",
+      "description": "在 12301 资源中心采购指定景点，每天 08:00 和 16:00 执行",
+      "enabled": 1,
+      "schedule": "0 8,16 * * *",
+      "config": "{\"timeout\":180000,\"notifyOnStart\":true,\"notifyOnSuccess\":true,\"notifyOnFailure\":true,\"screenshot\":{\"enabled\":true,\"retentionHours\":2},\"feishuCommand\":{\"trigger\":\"/procurement\",\"actions\":[\"run\",\"status\",\"help\"]}}",
+      "version": "1.0.0",
+      "publish_count": 0,
+      "created_at": "2026-03-07T14:34:02.367Z"
+    },
+    {
+      "id": 4,
+      "name": "景点同步",
+      "description": "同步票付通数据 + 刷新门票价格，每天 08:00 和 16:00 执行",
+      "enabled": 1,
+      "schedule": "0 8,16 * * *",
+      "config": "{\"timeout\":300000,\"notifyOnStart\":true,\"notifyOnSuccess\":true,\"notifyOnFailure\":true,\"screenshot\":{\"enabled\":true,\"retentionHours\":2},\"stealth\":true,\"feishuCommand\":{\"trigger\":\"/sync-scenic\",\"actions\":[\"run\",\"status\",\"help\"]}}",
+      "version": "1.0.0",
+      "publish_count": 0,
+      "created_at": "2026-03-07T14:34:02.367Z"
     }
   ],
   "scenic_spots": [

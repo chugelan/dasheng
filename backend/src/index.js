@@ -18,6 +18,10 @@ const scheduler = require('./scheduler');
 const database = require('./database');
 const logger = require('./utils/logger');
 const screenshotCleanup = require('./scheduler/screenshot-cleanup');
+const feishuWebhook = require('./api/feishu-webhook');
+
+// 注册飞书命令
+feishuWebhook.registerBuiltInCommands();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,6 +48,9 @@ app.use((req, res, next) => {
 
 // API 路由
 app.use('/api', apiRoutes);
+
+// 飞书 Webhook
+app.use('/feishu', feishuWebhook.router);
 
 // 前端静态资源（生产环境）
 app.get('*', (req, res) => {
