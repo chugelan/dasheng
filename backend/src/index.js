@@ -17,6 +17,7 @@ const apiRoutes = require('./api');
 const scheduler = require('./scheduler');
 const database = require('./database');
 const logger = require('./utils/logger');
+const screenshotCleanup = require('./scheduler/screenshot-cleanup');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -70,6 +71,10 @@ async function start() {
     // 启动调度器
     await scheduler.initialize();
     logger.info('调度器启动成功');
+
+    // 启动截图清理任务
+    screenshotCleanup.start();
+    logger.info('截图清理任务已启动');
 
     // 启动 HTTP 服务
     app.listen(PORT, () => {

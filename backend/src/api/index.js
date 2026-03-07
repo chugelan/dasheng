@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const database = require('../database');
 const scheduler = require('../scheduler');
 const logger = require('../utils/logger');
+const screenshotCleanup = require('../scheduler/screenshot-cleanup');
 
 // ==================== 任务管理 ====================
 
@@ -333,6 +334,75 @@ router.get('/health', (req, res) => {
       uptime: process.uptime()
     }
   });
+});
+
+// ==================== 截图管理 ====================
+
+/**
+ * GET /api/screenshots/stats - 获取截图统计
+ */
+router.get('/screenshots/stats', (req, res) => {
+  try {
+    const stats = screenshotCleanup.getStats();
+    
+    res.json({
+      success: true,
+      data: stats
+    });
+  } catch (error) {
+    logger.error('获取截图统计失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * POST /api/screenshots/cleanup - 手动清理截图
+ */
+router.post('/screenshots/cleanup', (req, res) => {
+  try {
+    const { taskId } = req.body;
+    
+    screenshotCleanup.manualClean(taskId).then(cleaned => {
+      res.json({
+        success: true,
+        data: { cleaned }
+      });
+    });
+  } catch (error) {
+    logger.error('清理截图失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET /api/screenshots - 获取截图列表
+ */
+router.get('/screenshots', (req, res) => {
+  try {
+    const { taskId, limit = 50 } = req.query;
+    const db = database.getDb();
+    
+    let query = 'SELECT * FROM screenshots WHERE cleaned = 0';
+    const params = [];
+    
+    if (taskId) {
+      query += ' AND task_id = ?';
+      params.push(taskId);
+    }
+    
+    query += ' ORDER BY created_at DESC LIMIT ?';
+    params.push(parseInt(limit));
+    
+    const screenshots = db.prepare(query).all(...params);
+    
+    res.json({
+      success: true,
+      data: screenshots
+    });
+  } catch (error) {
+    logger.error('获取截图列表失败:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 module.exports = router;
