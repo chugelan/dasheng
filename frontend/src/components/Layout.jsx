@@ -6,7 +6,9 @@ import {
   ScheduleOutlined,
   FileTextOutlined,
   SettingOutlined,
-  RobotOutlined
+  RobotOutlined,
+  CameraOutlined,
+  ThunderboltOutlined
 } from '@ant-design/icons';
 
 const { Header, Sider, Content } = AntLayout;
@@ -21,7 +23,17 @@ function Layout() {
     {
       key: '/',
       icon: <DashboardOutlined />,
-      label: <Link to="/">任务列表</Link>
+      label: <Link to="/">仪表盘</Link>
+    },
+    {
+      key: '/tasks',
+      icon: <ThunderboltOutlined />,
+      label: <Link to="/tasks">任务管理</Link>
+    },
+    {
+      key: '/screenshots',
+      icon: <CameraOutlined />,
+      label: <Link to="/screenshots">截图管理</Link>
     },
     {
       key: '/logs',
