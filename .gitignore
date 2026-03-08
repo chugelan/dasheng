@@ -2,15 +2,19 @@
 node_modules/
 package-lock.json
 
-# 环境变量
+# 🔒 敏感配置文件（绝不提交）
 **/config/.env
+**/.env
 **/.env.local
+**/data/credentials.enc
+**/data/*.key
 
 # 数据库文件
 **/data/*.db
 **/data/*.db-journal
 **/data/*.db-wal
 **/data/*.db-shm
+**/data/*.json
 
 # 日志文件
 **/logs/*.log

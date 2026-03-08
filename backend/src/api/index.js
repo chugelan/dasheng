@@ -10,9 +10,13 @@ const scheduler = require('../scheduler');
 const logger = require('../utils/logger');
 const screenshotCleanup = require('../scheduler/screenshot-cleanup');
 const feishuWebhook = require('./feishu-webhook');
+const credentialsRouter = require('./credentials');
 
 // 注册飞书命令
 feishuWebhook.registerBuiltInCommands();
+
+// 凭据管理路由
+router.use('/credentials', credentialsRouter);
 
 // ==================== 任务管理 ====================
 

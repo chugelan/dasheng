@@ -10,17 +10,21 @@ const database = require('../backend/src/database');
 const notifier = require('../backend/src/notifier');
 const screenshotManager = require('../backend/src/utils/screenshot-manager');
 const logger = require('../backend/src/utils/logger');
+const credentials = require('../backend/src/utils/credentials');
 
 const CONFIG = {
   loginUrl: 'https://my.12301.cc/home.html',
   resourceUrl: 'https://my.12301.cc/new/resourcecenter.html',
-  username: process.env.ORDER_USERNAME,
-  password: process.env.ORDER_PASSWORD,
   chromePath: process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   headless: false,  // 非无头模式
   timeout: 120000,
   screenshotEnabled: true
 };
+
+// 安全获取凭据
+function get12301Credentials() {
+  return credentials.getCredentials('12301');
+}
 
 /**
  * 加载景点配置
@@ -36,14 +40,18 @@ function loadScenicSpots() {
 async function login(page) {
   logger.info('🔑 开始登录...');
   
+  // 安全获取凭据
+  const { username, password } = get12301Credentials();
+  logger.info('✅ 凭据已加载（已脱敏）');
+  
   await page.goto(CONFIG.loginUrl, { waitUntil: 'networkidle2', timeout: 60000 });
   
   const usernameInput = await page.$('input[type="text"]');
   const passwordInput = await page.$('input[type="password"]');
   
   if (usernameInput && passwordInput) {
-    await usernameInput.type(CONFIG.username);
-    await passwordInput.type(CONFIG.password);
+    await usernameInput.type(username);
+    await passwordInput.type(password);
     await page.keyboard.press('Enter');
     await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 30000 });
     logger.info('✅ 登录成功');

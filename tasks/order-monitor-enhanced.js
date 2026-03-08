@@ -7,15 +7,19 @@ const puppeteer = require('puppeteer');
 const database = require('../backend/src/database');
 const notifier = require('../backend/src/notifier');
 const logger = require('../backend/src/utils/logger');
+const credentials = require('../backend/src/utils/credentials');
 
 const CONFIG = {
   loginUrl: 'https://my.12301.cc/home.html',
-  username: process.env.ORDER_USERNAME,
-  password: process.env.ORDER_PASSWORD,
   chromePath: process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   maxOrders: 5,
   deduplication: true
 };
+
+// 安全获取凭据
+function get12301Credentials() {
+  return credentials.getCredentials('12301');
+}
 
 /**
  * 检查数据是否重复（数据库版本）
@@ -93,6 +97,10 @@ async function fetchFailedOrders() {
   try {
     logger.info('开始登录订单系统...');
     
+    // 安全获取凭据
+    const { username, password } = get12301Credentials();
+    logger.info('✅ 凭据已加载（已脱敏）');
+    
     browser = await puppeteer.launch({
       headless: true,
       executablePath: CONFIG.chromePath,
@@ -114,8 +122,8 @@ async function fetchFailedOrders() {
     const passwordInput = await page.$('input[type="password"]');
     
     if (usernameInput && passwordInput) {
-      await usernameInput.type(CONFIG.username);
-      await passwordInput.type(CONFIG.password);
+      await usernameInput.type(username);
+      await passwordInput.type(password);
       await page.keyboard.press('Enter');
       await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 30000 });
       logger.info('✅ 登录成功');

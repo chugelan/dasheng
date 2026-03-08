@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Descriptions, Button, Space, message, Alert, Tag } from 'antd';
-import { CloudSyncOutlined, BackupOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { CloudSyncOutlined, SaveOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import api from '../api/request';
 
 function Settings() {
@@ -92,7 +92,7 @@ function Settings() {
         <Space>
           <Button
             type="primary"
-            icon={<BackupOutlined />}
+            icon={<SaveOutlined />}
             onClick={handleBackup}
           >
             备份数据库

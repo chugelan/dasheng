@@ -11,19 +11,23 @@ const database = require('../backend/src/database');
 const notifier = require('../backend/src/notifier');
 const screenshotManager = require('../backend/src/utils/screenshot-manager');
 const logger = require('../backend/src/utils/logger');
+const credentials = require('../backend/src/utils/credentials');
 
 // 启用 Stealth 插件
 puppeteer.use(StealthPlugin());
 
 const CONFIG = {
   url: 'https://vamall-admin.wfgravity.cn/#/event/index',
-  username: process.env.PIAOFUTONG_USERNAME || process.env.ORDER_USERNAME,
-  password: process.env.PIAOFUTONG_PASSWORD || process.env.ORDER_PASSWORD,
   chromePath: process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   headless: false,  // 非无头模式防检测
   timeout: 180000,
   screenshotEnabled: true
 };
+
+// 安全获取凭据
+function getPiaofutongCredentials() {
+  return credentials.getCredentials('piaofutong');
+}
 
 /**
  * 加载景点配置
@@ -39,6 +43,10 @@ function loadScenicSpots() {
 async function login(page) {
   logger.info('🔐 开始登录...');
   
+  // 安全获取凭据
+  const { username, password } = getPiaofutongCredentials();
+  logger.info('✅ 凭据已加载（已脱敏）');
+  
   await page.goto(CONFIG.url, { waitUntil: 'networkidle2', timeout: 60000 });
   await new Promise(r => setTimeout(r, 3000));
   
@@ -50,12 +58,12 @@ async function login(page) {
     await usernameInput.click({ clickCount: 3 });
     await page.keyboard.press('Backspace');
     await new Promise(r => setTimeout(r, 200));
-    await usernameInput.type(CONFIG.username, { delay: 50 });
+    await usernameInput.type(username, { delay: 50 });
     
     await passwordInput.click({ clickCount: 3 });
     await page.keyboard.press('Backspace');
     await new Promise(r => setTimeout(r, 200));
-    await passwordInput.type(CONFIG.password, { delay: 50 });
+    await passwordInput.type(password, { delay: 50 });
     
     logger.info('✅ 账号密码已输入');
     await new Promise(r => setTimeout(r, 500));
